@@ -42,4 +42,5 @@ export interface Achievement {
   year: string;
   category: 'competition' | 'certification' | 'recognition';
   rank?: string; // e.g. "1st Place", "Finalist"
+  imageUrl?: string;
 }

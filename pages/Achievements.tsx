@@ -14,7 +14,10 @@ const Achievements: React.FC = () => {
   const [formData, setFormData] = useState<Partial<Achievement>>({});
 
   const handleOpenModal = (e?: React.MouseEvent, item?: Achievement) => {
-    if (e) e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (item) {
         setEditingItem(item);
         setFormData(item);
@@ -36,89 +39,108 @@ const Achievements: React.FC = () => {
   };
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
+      e.preventDefault();
       e.stopPropagation();
-      if(window.confirm("Revoke this achievement?")) {
-          deleteAchievement(id);
-      }
+      // Use setTimeout to ensure window.confirm doesn't block the event loop prematurely
+      setTimeout(() => {
+        if(window.confirm("Revoke this achievement?")) {
+            console.log("Confirmed delete for achievement:", id);
+            deleteAchievement(id);
+        }
+      }, 10);
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="mb-12 flex justify-between items-end">
+    <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+      <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
         <div>
-            <h1 className="text-4xl font-bold text-white mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
                 <span className="text-cyber-neon">./</span>trophies
             </h1>
-            <p className="text-gray-400">Hall of fame and club recognitions.</p>
+            <p className="text-gray-400 text-sm md:text-base">Hall of fame and club recognitions.</p>
         </div>
         {isAuthenticated && (
             <button 
                 type="button"
                 onClick={(e) => handleOpenModal(e)}
-                className="bg-cyber-neon text-black px-4 py-2 rounded font-bold flex items-center gap-2 hover:bg-white transition-colors"
+                className="bg-cyber-neon text-black px-4 py-2 rounded font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors text-sm"
             >
                 <Plus size={18} /> Add Trophy
             </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {achievements.map((achievement) => (
-            <div key={achievement.id} className="relative bg-cyber-dark border border-cyber-dim rounded-lg p-6 group hover:border-cyber-neon transition-all hover:shadow-[0_0_15px_rgba(57,255,20,0.15)]">
+            <div key={achievement.id} className="relative bg-cyber-dark border border-cyber-dim rounded-lg p-5 md:p-6 group hover:border-cyber-neon transition-all hover:shadow-[0_0_15px_rgba(57,255,20,0.15)] overflow-hidden">
                 
                 {isAuthenticated && (
-                    <div className="absolute top-2 right-2 z-20 flex gap-2 bg-black/50 p-1 rounded">
+                    <div className="absolute top-0 right-0 p-2 z-30 flex gap-2 bg-black/60 rounded-bl-lg backdrop-blur-sm">
                         <button 
                             type="button"
                             onClick={(e) => handleOpenModal(e, achievement)} 
-                            className="p-1.5 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded border border-blue-600/50 transition-colors cursor-pointer"
+                            className="p-1.5 text-blue-400 hover:text-white transition-colors"
                         >
-                            <Edit size={14} />
+                            <Edit size={14} className="pointer-events-none" />
                         </button>
                         <button 
                             type="button"
                             onClick={(e) => handleDelete(e, achievement.id)} 
-                            className="p-1.5 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded border border-red-600/50 transition-colors cursor-pointer"
+                            className="p-1.5 text-red-400 hover:text-white transition-colors"
                         >
-                            <Trash2 size={14} />
+                            <Trash2 size={14} className="pointer-events-none" />
                         </button>
                     </div>
                 )}
 
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
-                    <Trophy size={64} className="text-cyber-neon" />
-                </div>
+                {achievement.imageUrl ? (
+                    <div className="absolute top-0 right-0 w-32 h-32 opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none grayscale group-hover:grayscale-0">
+                         <img 
+                            src={achievement.imageUrl} 
+                            alt="" 
+                            className="w-full h-full object-contain object-right-top" 
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.classList.add('hidden');
+                            }}
+                         />
+                    </div>
+                ) : (
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                        <Trophy size={64} className="text-cyber-neon" />
+                    </div>
+                )}
 
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-4 relative z-10">
                     {achievement.category === 'competition' ? (
-                        <Trophy className="text-yellow-500" size={24} />
+                        <Trophy className="text-yellow-500" size={20} />
                     ) : achievement.category === 'certification' ? (
-                        <ShieldCheck className="text-blue-500" size={24} />
+                        <ShieldCheck className="text-blue-500" size={20} />
                     ) : (
-                        <Star className="text-purple-500" size={24} />
+                        <Star className="text-purple-500" size={20} />
                     )}
                     <span className="text-xs font-mono uppercase tracking-widest text-gray-500">
                         {achievement.category}
                     </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyber-neon transition-colors">
+                <h3 className="text-lg md:text-xl font-bold text-white mb-2 group-hover:text-cyber-neon transition-colors relative z-10 pr-12">
                     {achievement.title}
                 </h3>
 
-                <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                <p className="text-gray-400 text-sm mb-6 leading-relaxed relative z-10">
                     {achievement.description}
                 </p>
 
-                <div className="mt-auto flex justify-between items-center pt-4 border-t border-cyber-dim/50">
+                <div className="mt-auto flex justify-between items-center pt-4 border-t border-cyber-dim/50 relative z-10">
                     <div className="flex items-center gap-2">
-                        <span className="text-sm font-mono text-white bg-cyber-dim/30 px-2 py-1 rounded border border-cyber-dim">
+                        <span className="text-xs md:text-sm font-mono text-white bg-cyber-dim/30 px-2 py-1 rounded border border-cyber-dim">
                             {achievement.year}
                         </span>
                     </div>
                     {achievement.rank && (
-                        <div className="flex items-center gap-1 text-cyber-neon font-bold text-sm">
-                            <Medal size={16} />
+                        <div className="flex items-center gap-1 text-cyber-neon font-bold text-xs md:text-sm">
+                            <Medal size={14} />
                             {achievement.rank}
                         </div>
                     )}
@@ -154,6 +176,12 @@ const Achievements: React.FC = () => {
                           <option value="recognition">Recognition</option>
                       </select>
                   </div>
+              </div>
+              <div>
+                  <label className="text-xs font-mono text-gray-500">IMAGE URL</label>
+                  <input className="w-full bg-black border border-gray-700 p-2 text-white rounded focus:border-cyber-neon outline-none" 
+                    placeholder="/achievements/trophy.png"
+                    value={formData.imageUrl || ''} onChange={e => setFormData({...formData, imageUrl: e.target.value})} />
               </div>
               <div>
                   <label className="text-xs font-mono text-gray-500">RANK (Optional)</label>

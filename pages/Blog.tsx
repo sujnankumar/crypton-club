@@ -18,7 +18,10 @@ const Blog: React.FC = () => {
   const [tagsInput, setTagsInput] = useState('');
 
   const handleOpenModal = (e?: React.MouseEvent, post?: BlogPost) => {
-    if (e) e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (post) {
       setEditingPost(post);
       setFormData(post);
@@ -50,10 +53,15 @@ const Blog: React.FC = () => {
   };
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this intel report?')) {
-      deleteBlogPost(id);
-    }
+    // Use setTimeout to ensure window.confirm doesn't block the event loop prematurely
+    setTimeout(() => {
+        if (window.confirm('Are you sure you want to delete this intel report?')) {
+            console.log("Confirmed delete for blog:", id);
+            deleteBlogPost(id);
+        }
+    }, 10);
   };
 
   return (
@@ -85,27 +93,29 @@ const Blog: React.FC = () => {
         )}
 
         {blogPosts.map((post) => (
-          <TerminalCard key={post.id} title={`${post.date}_log.txt`} className="group relative">
-            
-            {isAuthenticated && (
-                <div className="absolute top-4 right-4 z-20 flex gap-2">
+          <TerminalCard 
+            key={post.id} 
+            title={`${post.date}_log.txt`} 
+            className="group"
+            actions={isAuthenticated && (
+                <div className="flex gap-2">
                     <button 
                         type="button"
                         onClick={(e) => handleOpenModal(e, post)} 
-                        className="p-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded border border-blue-600/50 transition-colors cursor-pointer"
+                        className="p-1 text-blue-400 hover:text-white transition-colors"
                     >
-                        <Edit size={16} />
+                        <Edit size={14} className="pointer-events-none" />
                     </button>
                     <button 
                         type="button"
                         onClick={(e) => handleDelete(e, post.id)} 
-                        className="p-2 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded border border-red-600/50 transition-colors cursor-pointer"
+                        className="p-1 text-red-400 hover:text-white transition-colors"
                     >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} className="pointer-events-none" />
                     </button>
                 </div>
             )}
-
+          >
             <article>
               <Link to={`/blog/${post.id}`}>
                 <h2 className="text-2xl font-bold text-white group-hover:text-cyber-neon cursor-pointer transition-colors mb-2">

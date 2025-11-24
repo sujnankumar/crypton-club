@@ -6,7 +6,7 @@ export const MEMBERS: Member[] = [
     name: 'Alex "NullPtr" Chen',
     role: 'President',
     bio: 'Senior CS student specializing in network security and infrastructure.',
-    imageUrl: 'https://picsum.photos/200/200?random=1',
+    imageUrl: '/members/alex.jpg',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com'
@@ -17,7 +17,7 @@ export const MEMBERS: Member[] = [
     name: 'Sarah "ZeroDay" Jones',
     role: 'Vice President',
     bio: 'CTF Captain. Loves binary exploitation and cryptography challenges.',
-    imageUrl: 'https://picsum.photos/200/200?random=2',
+    imageUrl: '/members/sarah.jpg',
     socials: {
       github: 'https://github.com',
       twitter: 'https://twitter.com'
@@ -28,7 +28,7 @@ export const MEMBERS: Member[] = [
     name: 'Marcus "Root" Johnson',
     role: 'Workshop Lead',
     bio: 'Passionate about teaching and open source intelligence (OSINT).',
-    imageUrl: 'https://picsum.photos/200/200?random=3',
+    imageUrl: '/members/marcus.jpg',
     socials: {
       linkedin: 'https://linkedin.com',
       website: 'https://example.com'
@@ -39,7 +39,7 @@ export const MEMBERS: Member[] = [
     name: 'Emily "Ghost" Davis',
     role: 'Treasurer',
     bio: 'Keeping the club funds secure using blockchain technology (just kidding).',
-    imageUrl: 'https://picsum.photos/200/200?random=4',
+    imageUrl: '/members/emily.jpg',
     socials: {
       github: 'https://github.com'
     }

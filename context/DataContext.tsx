@@ -33,23 +33,31 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Initialize state from LocalStorage or fall back to static data
   const [events, setEvents] = useState<Event[]>(() => {
-    const saved = localStorage.getItem('crypton_events');
-    return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+    try {
+      const saved = localStorage.getItem('crypton_events');
+      return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+    } catch (e) { return INITIAL_EVENTS; }
   });
 
   const [members, setMembers] = useState<Member[]>(() => {
-    const saved = localStorage.getItem('crypton_members');
-    return saved ? JSON.parse(saved) : INITIAL_MEMBERS;
+    try {
+      const saved = localStorage.getItem('crypton_members');
+      return saved ? JSON.parse(saved) : INITIAL_MEMBERS;
+    } catch (e) { return INITIAL_MEMBERS; }
   });
 
   const [achievements, setAchievements] = useState<Achievement[]>(() => {
-    const saved = localStorage.getItem('crypton_achievements');
-    return saved ? JSON.parse(saved) : INITIAL_ACHIEVEMENTS;
+    try {
+      const saved = localStorage.getItem('crypton_achievements');
+      return saved ? JSON.parse(saved) : INITIAL_ACHIEVEMENTS;
+    } catch (e) { return INITIAL_ACHIEVEMENTS; }
   });
 
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => {
-    const saved = localStorage.getItem('crypton_blog');
-    return saved ? JSON.parse(saved) : INITIAL_BLOG_POSTS;
+    try {
+      const saved = localStorage.getItem('crypton_blog');
+      return saved ? JSON.parse(saved) : INITIAL_BLOG_POSTS;
+    } catch (e) { return INITIAL_BLOG_POSTS; }
   });
 
   // Persist changes to LocalStorage
@@ -61,22 +69,34 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Event Actions
   const addEvent = (item: Event) => setEvents(prev => [...prev, item]);
   const updateEvent = (item: Event) => setEvents(prev => prev.map(i => i.id === item.id ? item : i));
-  const deleteEvent = (id: string) => setEvents(prev => prev.filter(i => i.id.toString() !== id.toString()));
+  const deleteEvent = (id: string) => {
+    console.log('Deleting Event:', id);
+    setEvents(prev => prev.filter(i => String(i.id) !== String(id)));
+  };
 
   // Member Actions
   const addMember = (item: Member) => setMembers(prev => [...prev, item]);
   const updateMember = (item: Member) => setMembers(prev => prev.map(i => i.id === item.id ? item : i));
-  const deleteMember = (id: string) => setMembers(prev => prev.filter(i => i.id.toString() !== id.toString()));
+  const deleteMember = (id: string) => {
+    console.log('Deleting Member:', id);
+    setMembers(prev => prev.filter(i => String(i.id) !== String(id)));
+  };
 
   // Achievement Actions
   const addAchievement = (item: Achievement) => setAchievements(prev => [...prev, item]);
   const updateAchievement = (item: Achievement) => setAchievements(prev => prev.map(i => i.id === item.id ? item : i));
-  const deleteAchievement = (id: string) => setAchievements(prev => prev.filter(i => i.id.toString() !== id.toString()));
+  const deleteAchievement = (id: string) => {
+    console.log('Deleting Achievement:', id);
+    setAchievements(prev => prev.filter(i => String(i.id) !== String(id)));
+  };
 
   // Blog Actions
-  const addBlogPost = (item: BlogPost) => setBlogPosts(prev => [item, ...prev]); // Newest first
+  const addBlogPost = (item: BlogPost) => setBlogPosts(prev => [item, ...prev]); 
   const updateBlogPost = (item: BlogPost) => setBlogPosts(prev => prev.map(i => i.id === item.id ? item : i));
-  const deleteBlogPost = (id: string) => setBlogPosts(prev => prev.filter(i => i.id.toString() !== id.toString()));
+  const deleteBlogPost = (id: string) => {
+    console.log('Deleting Blog:', id);
+    setBlogPosts(prev => prev.filter(i => String(i.id) !== String(id)));
+  };
 
   return (
     <DataContext.Provider value={{

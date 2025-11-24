@@ -5,13 +5,15 @@ interface TerminalCardProps {
   title?: string;
   className?: string;
   glowing?: boolean;
+  actions?: React.ReactNode;
 }
 
 const TerminalCard: React.FC<TerminalCardProps> = ({ 
   children, 
   title = "bash", 
   className = "",
-  glowing = false
+  glowing = false,
+  actions
 }) => {
   return (
     <div className={`
@@ -21,20 +23,24 @@ const TerminalCard: React.FC<TerminalCardProps> = ({
       ${className}
     `}>
       {/* Terminal Header */}
-      <div className="bg-cyber-dim/30 border-b border-cyber-dim px-4 py-2 flex items-center justify-between">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-          <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+      <div className="bg-cyber-dim/30 border-b border-cyber-dim px-3 py-2 md:px-4 flex items-center justify-between">
+        <div className="flex gap-1.5 md:gap-2 items-center">
+          <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500/80"></div>
+          <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500/80"></div>
+          <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500/80"></div>
+          <div className="ml-2 text-[10px] md:text-xs text-gray-400 font-mono select-none truncate max-w-[150px] md:max-w-none">
+            {title}
+          </div>
         </div>
-        <div className="text-xs text-gray-400 font-mono select-none">
-          {title}
+        
+        {/* Actions Container with explicit stopPropagation */}
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+           {actions}
         </div>
-        <div className="w-8"></div> {/* Spacer for centering */}
       </div>
 
       {/* Terminal Body */}
-      <div className="p-6 text-gray-300 font-mono text-sm leading-relaxed">
+      <div className="p-4 md:p-6 text-gray-300 font-mono text-sm leading-relaxed">
         {children}
       </div>
     </div>

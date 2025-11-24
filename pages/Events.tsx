@@ -22,7 +22,10 @@ const Events: React.FC = () => {
   });
 
   const handleOpenModal = (e?: React.MouseEvent, event?: Event) => {
-    if (e) e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (event) {
       setEditingEvent(event);
       setFormData(event);
@@ -48,28 +51,33 @@ const Events: React.FC = () => {
   };
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this event?')) {
-      deleteEvent(id);
-    }
+    // Use setTimeout to ensure window.confirm doesn't block the event loop prematurely
+    setTimeout(() => {
+        if (window.confirm('Are you sure you want to delete this event?')) {
+            console.log("Confirmed delete for event:", id);
+            deleteEvent(id);
+        }
+    }, 10);
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
             <span className="text-cyber-neon">./</span>events
           </h1>
-          <p className="text-gray-400">Workshops, CTFs, and meetups.</p>
+          <p className="text-gray-400 text-sm md:text-base">Workshops, CTFs, and meetups.</p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             {isAuthenticated && (
                 <button 
                     type="button"
                     onClick={(e) => handleOpenModal(e)}
-                    className="bg-cyber-neon text-black px-4 py-2 rounded font-bold flex items-center gap-2 hover:bg-white transition-colors"
+                    className="bg-cyber-neon text-black px-4 py-2 rounded font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors text-sm"
                 >
                     <Plus size={18} /> New Event
                 </button>
@@ -82,7 +90,7 @@ const Events: React.FC = () => {
                 key={type}
                 type="button"
                 onClick={() => setFilter(type)}
-                className={`px-4 py-2 rounded text-sm font-medium transition-colors capitalize ${
+                className={`flex-1 sm:flex-none px-3 md:px-4 py-1.5 md:py-2 rounded text-xs md:text-sm font-medium transition-colors capitalize ${
                     filter === type
                     ? 'bg-cyber-neon text-black'
                     : 'text-gray-400 hover:text-white'
@@ -103,37 +111,44 @@ const Events: React.FC = () => {
         )}
         
         {filteredEvents.map((event) => (
-          <TerminalCard key={event.id} title={`event_${event.id}.sh`} className="group relative">
-            {isAuthenticated && (
-                <div className="absolute top-4 right-4 z-20 flex gap-2">
+          <TerminalCard 
+            key={event.id} 
+            title={`event_${event.id}.sh`} 
+            className="group"
+            actions={isAuthenticated && (
+                <div className="flex gap-2">
                     <button 
                         type="button"
                         onClick={(e) => handleOpenModal(e, event)} 
-                        className="p-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded border border-blue-600/50 transition-colors cursor-pointer"
+                        className="p-1 text-blue-400 hover:text-white transition-colors"
+                        title="Edit"
                     >
-                        <Edit size={16} />
+                        <Edit size={14} className="pointer-events-none" />
                     </button>
                     <button 
                         type="button"
                         onClick={(e) => handleDelete(e, event.id)} 
-                        className="p-2 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded border border-red-600/50 transition-colors cursor-pointer"
+                        className="p-1 text-red-400 hover:text-white transition-colors"
+                        title="Delete"
                     >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} className="pointer-events-none" />
                     </button>
                 </div>
             )}
-
-            <div className="flex flex-col md:flex-row gap-6">
+          >
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
               
               {/* Date Block */}
-              <div className="flex-shrink-0 flex flex-col items-center justify-center border border-cyber-dim bg-black/50 w-full md:w-32 h-32 rounded">
-                <span className="text-3xl font-bold text-cyber-neon">
-                  {new Date(event.date).getDate()}
-                </span>
-                <span className="text-sm uppercase tracking-widest text-gray-400">
-                  {new Date(event.date).toLocaleString('default', { month: 'short' })}
-                </span>
-                <span className="text-xs text-gray-600 mt-2">
+              <div className="flex-shrink-0 flex flex-row md:flex-col items-center justify-between md:justify-center px-4 py-3 md:p-0 border border-cyber-dim bg-black/50 w-full md:w-32 h-auto md:h-32 rounded">
+                <div className="flex items-baseline gap-2 md:flex-col md:gap-0 md:items-center">
+                    <span className="text-2xl md:text-3xl font-bold text-cyber-neon">
+                    {new Date(event.date).getDate()}
+                    </span>
+                    <span className="text-sm uppercase tracking-widest text-gray-400">
+                    {new Date(event.date).toLocaleString('default', { month: 'short' })}
+                    </span>
+                </div>
+                <span className="text-sm text-gray-600 md:mt-2">
                   {new Date(event.date).getFullYear()}
                 </span>
               </div>
@@ -156,14 +171,14 @@ const Events: React.FC = () => {
                     )}
                 </div>
 
-                <h2 className="text-2xl font-bold text-white group-hover:text-cyber-neon transition-colors">
+                <h2 className="text-xl md:text-2xl font-bold text-white group-hover:text-cyber-neon transition-colors">
                   {event.title}
                 </h2>
-                <p className="text-gray-400 max-w-2xl">
+                <p className="text-gray-400 text-sm md:text-base max-w-2xl">
                   {event.description}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-6 pt-2 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center gap-4 md:gap-6 pt-2 text-sm text-gray-500">
                   <div className="flex items-center gap-2">
                     <MapPin size={16} />
                     {event.location}
@@ -176,18 +191,18 @@ const Events: React.FC = () => {
               </div>
 
               {/* Action */}
-              <div className="flex items-center">
+              <div className="flex items-center mt-2 md:mt-0">
                  {event.status === 'upcoming' ? (
                      <a 
                         href={event.googleFormUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full md:w-auto text-center bg-cyber-dim/20 hover:bg-cyber-neon hover:text-black border border-cyber-neon text-cyber-neon px-6 py-3 rounded transition-all flex items-center justify-center gap-2"
+                        className="w-full md:w-auto text-center bg-cyber-dim/20 hover:bg-cyber-neon hover:text-black border border-cyber-neon text-cyber-neon px-6 py-3 rounded transition-all flex items-center justify-center gap-2 font-bold text-sm"
                      >
                         Register <ExternalLink size={16} />
                      </a>
                  ) : (
-                     <button disabled className="w-full md:w-auto px-6 py-3 border border-gray-700 text-gray-600 rounded cursor-not-allowed">
+                     <button disabled className="w-full md:w-auto px-6 py-3 border border-gray-700 text-gray-600 rounded cursor-not-allowed text-sm">
                         Archived
                      </button>
                  )}
@@ -209,7 +224,7 @@ const Events: React.FC = () => {
                   <input required className="w-full bg-black border border-gray-700 p-2 text-white rounded focus:border-cyber-neon outline-none" 
                     value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label className="text-xs font-mono text-gray-500">DATE</label>
                     <input type="datetime-local" required className="w-full bg-black border border-gray-700 p-2 text-white rounded focus:border-cyber-neon outline-none" 
