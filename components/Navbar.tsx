@@ -31,7 +31,12 @@ const Navbar: React.FC = () => {
             {/* College Logo */}
             <a href="https://mite.ac.in" target="_blank" rel="noopener noreferrer" className="flex items-center hover:opacity-80 transition-opacity">
                 <div className="bg-white/90 p-1 rounded-sm">
-                  <img src="/mite-logo.png" alt="MITE" className="h-8 w-auto" />
+                  <img 
+                    src="./mite-logo.png" 
+                    alt="MITE" 
+                    className="h-8 w-auto" 
+                  />
+                  <span className="hidden text-black font-bold text-xs px-1">MITE</span>
                 </div>
             </a>
             

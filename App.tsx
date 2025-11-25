@@ -37,10 +37,18 @@ function App() {
                 {/* Logos in Footer */}
                 <div className="flex items-center gap-6 opacity-70 hover:opacity-100 transition-opacity">
                    <div className="bg-white/90 p-1.5 rounded-sm">
-                      <img src="/mite-logo.png" alt="MITE" className="h-8 w-auto grayscale hover:grayscale-0 transition-all" />
+                      <img 
+                        src="/mite-logo.png" 
+                        alt="MITE" 
+                        className="h-8 w-auto grayscale hover:grayscale-0 transition-all" 
+                      />
                    </div>
                    <span className="text-gray-600 font-mono text-xs">x</span>
-                   <img src="/crypton-logo.png" alt="Crypton" className="h-10 w-10 grayscale hover:grayscale-0 transition-all drop-shadow-[0_0_5px_rgba(57,255,20,0.3)]" />
+                   <img 
+                     src="/crypton-logo.png" 
+                     alt="Crypton" 
+                     className="h-10 w-10 grayscale hover:grayscale-0 transition-all drop-shadow-[0_0_5px_rgba(57,255,20,0.3)]" 
+                   />
                 </div>
 
                 <div className="text-center">
