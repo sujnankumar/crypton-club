@@ -194,12 +194,9 @@ app.delete('/api/blog/:id', async (req, res) => {
   res.json({ success });
 });
 
-// Start server
-async function startServer() {
-  await ensureDataDir();
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-  });
+// Start server if running directly
+if (process.env.NODE_ENV !== 'production') {
+  startServer();
 }
 
-startServer();
+export default app;
