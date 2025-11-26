@@ -8,7 +8,6 @@
     "server": "cd server && npm start",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "vite build",
-    "build:all": "npm run build && echo 'Frontend built successfully. Serverless API ready for deployment.'",
     "preview": "vite preview"
   },
   "dependencies": {
