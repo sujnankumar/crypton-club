@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
             <a href="https://mite.ac.in" target="_blank" rel="noopener noreferrer" className="flex items-center hover:opacity-80 transition-opacity">
                 <div className="bg-white/90 p-1 rounded-sm">
                   <img 
-                    src="./mite-logo.png" 
+                    src="../src/mite-logo.png" 
                     alt="MITE" 
                     className="h-8 w-auto" 
                   />
@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
             {/* Club Logo */}
             <Link to="/" className="flex items-center gap-3 group">
               <img 
-                src="/crypton-logo.png" 
+                src="../src/crypton-logo.png" 
                 alt="Crypton Logo" 
                 className="h-10 w-10 object-contain drop-shadow-[0_0_2px_#39FF14] group-hover:drop-shadow-[0_0_8px_#39FF14] transition-all" 
               />

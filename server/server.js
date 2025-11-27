@@ -5,6 +5,9 @@ import { MongoClient, ObjectId } from 'mongodb';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Middleware
 const allowedOrigins = [
   'http://localhost:5173',
